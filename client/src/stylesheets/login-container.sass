@@ -1,0 +1,49 @@
+@import './scheme'
+
+$article-pos: 50% !default
+$article-pos-mobile: calc(10% + (90% / 2))
+
+section
+    position: relative
+    height: 100vh 
+    width: 100vw
+    overflow: hidden
+    a 
+        color: $color0
+        font-weight: bold
+        cursor: pointer 
+        text-decoration: underline
+    article 
+        background-color: transparentize($color4, 0.4)
+        background-image: linear-gradient(70deg, $color4, $color5)
+        border-radius: 20px
+        width: fit-content
+        position: absolute
+        transform: translate(-50%, -50%)
+        top: $article-pos
+        left: 50%
+        padding: 20px
+        animation: 0.75s article-fade
+        filter: blur(8px)
+        @media screen and (max-width: 1060px)
+            min-width: 80%
+        
+        @media screen and (max-width: 670px)
+            width: 100vw
+            height: 90vh
+            border-radius: 0
+            top: $article-pos-mobile
+            animation-name: article-fade-mobile
+
+
+@keyframes article-fade
+    0%
+        top: 100%
+    100%            
+        top: $article-pos
+
+@keyframes article-fade-mobile
+    0%
+        top: 100%
+    100%            
+        top: $article-pos-mobile

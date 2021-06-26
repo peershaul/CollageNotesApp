@@ -1,0 +1,68 @@
+form:not(.sign-up) {
+  padding: 10px 20px;
+  font-size: 14pt;
+  margin-bottom: 10px;
+}
+@media screen and (max-width: 320px) {
+  form:not(.sign-up) {
+    padding: 10px;
+  }
+}
+form:not(.sign-up) > div {
+  margin: 20px 10px;
+}
+form:not(.sign-up) > div label {
+  margin-right: 30px;
+  color: #222222;
+}
+form:not(.sign-up) > div label::after {
+  content: ":";
+}
+@media screen and (max-width: 530px) {
+  form:not(.sign-up) > div label {
+    margin: 5px auto;
+    display: block;
+    text-align: left;
+    width: 75%;
+  }
+  form:not(.sign-up) > div label::after {
+    content: "";
+  }
+}
+form:not(.sign-up) > div input {
+  font-size: 15pt;
+  background-color: #222222;
+  color: #c9184a;
+  border: 4.5px solid #222222;
+  outline: none;
+  padding: 7px 15px;
+  font-family: "JetBrains Mono", Arial, Helvetica, sans-seri;
+  border-radius: 10px;
+  transition: all 0.25s;
+}
+form:not(.sign-up) > div input:focus {
+  background-color: #3e1822;
+}
+form:not(.sign-up) > div input:hover:not(:focus) {
+  background-color: #301d22;
+}
+form:not(.sign-up) input[type=submit] {
+  padding: 7px 20px;
+  margin: 10px;
+  background-color: #222222;
+  outline: none;
+  border: 4.5px solid #222222;
+  cursor: pointer;
+  color: #c9184a;
+  border-radius: 10px;
+  transition: all 0.5s;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: bold;
+  font-size: 17pt;
+}
+form:not(.sign-up) input[type=submit]:hover, form:not(.sign-up) input[type=submit]:focus {
+  background-color: #590d22;
+  color: #e4335c;
+}
+
+/*# sourceMappingURL=login.css.map */

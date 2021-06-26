@@ -1,0 +1,58 @@
+section {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+section a {
+  color: #222222;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+section article {
+  background-color: rgba(201, 24, 74, 0.6);
+  background-image: linear-gradient(70deg, #c9184a, #ff4d6d);
+  border-radius: 20px;
+  width: fit-content;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  padding: 20px;
+  animation: 0.75s article-fade;
+  filter: blur(8px);
+}
+@media screen and (max-width: 1060px) {
+  section article {
+    min-width: 80%;
+  }
+}
+@media screen and (max-width: 670px) {
+  section article {
+    width: 100vw;
+    height: 90vh;
+    border-radius: 0;
+    top: calc(10% + (90% / 2));
+    animation-name: article-fade-mobile;
+  }
+}
+
+@keyframes article-fade {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 50%;
+  }
+}
+@keyframes article-fade-mobile {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: calc(10% + (90% / 2));
+  }
+}
+
+/*# sourceMappingURL=login-container.css.map */

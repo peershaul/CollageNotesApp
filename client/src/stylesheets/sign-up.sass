@@ -1,0 +1,108 @@
+@import './scheme'
+    
+.sign-up-container
+    position: fixed 
+    background-color: transparentize($color5, 0.9)  
+    height: 100% 
+    width: 100% 
+    z-index: 100
+    .close
+        position: absolute
+        width: fit-content
+        right: 15px
+        top: 15px
+        height: 50px
+        min-width: 50px
+        cursor: pointer
+        &::before, &::after 
+            content: ''
+            display: block 
+            background-color: $color7
+            position: absolute
+            transform: translate(-50%, -50%)
+            top: 50% 
+            left: 50%
+            height: 5px 
+            min-width: 40px    
+            border-radius: 5px
+            transition: all 0.25s
+        &::before 
+            transform: rotate(45deg) translate(-50%,-50%)
+            top: calc(50% + 12px)
+            left: calc(50% - 5px)
+        &::after 
+            transform: rotate(-45deg) translate(-50%, -50%)
+            top: calc(50% - 15px)
+            left: calc(50% - 2.5px)
+        &:hover 
+            &::before, &::after
+                background-color: $color8
+    form 
+        background-color: $color5 
+        background-image: linear-gradient(-50deg, mix($color3, $color4, 10%), $color6)
+        position: absolute
+        transform: translate(-50%, -50%)
+        top: 50%
+        left: 30% 
+        padding: 10px
+        padding-top: 50px
+        padding-right: 50px
+        border-radius: 25px
+        box-shadow: 3px 5px 10px #000a
+        color: $color0
+        & > div:not(.close) 
+            display: flex 
+            margin: 10px
+            padding: 10px
+            min-width: 400px
+            width: 550px
+            * 
+                width: 50%
+                font-size: 15pt
+            label 
+                text-align: right
+                margin-right: 20px
+                position: relative            
+                span 
+                    display: block 
+                    width: fit-content
+                    float: right
+                    position: absolute
+                    transform: translate(0, -50%)
+                    top: 50%
+                    right: 7%
+                    &::after 
+                        content: ':'
+
+            input 
+                border: 4.5px solid $color6
+                padding: 7px 15px
+                background-color: $color6
+                border-radius: 10px
+                color: $color0
+                outline: none
+                transition: all 0.25s
+                font:
+                    family: 'JetBrains Mono'
+                &:hover 
+                    background-color: mix($color6, $color5, 50%)
+                &:focus 
+                    background-color: $color5
+
+        input[type = 'submit']
+            margin: 15px 10px
+            padding: 10px 20px
+            border: 4.5px solid $color6
+            outline: none
+            border-radius: 10px
+            cursor: pointer
+            background-color: $color6
+            transition: all 0.25s
+            margin-bottom: 25px
+            color: $color0
+            font:
+                size: 17pt
+                family: 'JetBrains Mono'
+                weight: bold
+            &:hover, &:focus 
+                background-color: $color7

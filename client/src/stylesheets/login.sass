@@ -1,0 +1,57 @@
+@import './scheme'
+    
+form:not(.sign-up) 
+    padding: 10px 20px
+    font-size: 14pt
+    margin-bottom: 10px
+
+    @media screen and (max-width: 320px)
+        padding: 10px
+    
+    & > div
+        margin: 20px 10px
+        label   
+            margin-right: 30px
+            color: $color0
+            &::after 
+                content: ':'
+            @media screen and (max-width: 530px)
+                &::after 
+                    content: ''
+                margin: 5px auto
+                display: block
+                text-align: left
+                width: 75%
+        input 
+            font-size: 15pt
+            background-color: $color0
+            color: $color4
+            border: 4.5px solid $color0 
+            outline: none
+            padding: 7px 15px
+            font-family: 'JetBrains Mono', Arial, Helvetica, sans-seri
+            border-radius: 10px
+            transition: all .25s
+            &:focus 
+                background-color: mix($color0, $color1, 50%)
+            &:hover:not(:focus) 
+                background-color: mix($color0, $color1, 75%)
+
+    input[type = 'submit'] 
+        padding: 7px 20px
+        margin: 10px
+        background-color: $color0
+        outline: none
+        border: 4.5px solid $color0
+        cursor: pointer
+        color: $color4
+        border-radius: 10px
+        transition: all 0.5s
+        font:
+            family: 'JetBrains Mono', monospace
+            weight: bold
+            size: 17pt
+        
+        &:hover, &:focus 
+            background-color: $color1
+            color: mix($color4, $color5, 50%)
