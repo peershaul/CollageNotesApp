@@ -4,6 +4,17 @@
   height: 100%;
   width: 100%;
   z-index: 100;
+  animation: fade-in-background 1s;
+  transition: all 1s;
+}
+.sign-up-container.closed {
+  display: none;
+}
+.sign-up-container.closing {
+  background-color: transparent;
+}
+.sign-up-container.closing form {
+  left: -100%;
 }
 .sign-up-container .close {
   position: absolute;
@@ -46,12 +57,12 @@
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
-  left: 30%;
   padding: 10px;
   padding-top: 50px;
   padding-right: 50px;
   border-radius: 25px;
   box-shadow: 3px 5px 10px #000a;
+  transition: all 1s !important;
   color: #222222;
 }
 .sign-up-container form > div:not(.close) {
@@ -115,6 +126,82 @@
 }
 .sign-up-container form input[type=submit]:hover, .sign-up-container form input[type=submit]:focus {
   background-color: #ffb3c1;
+}
+@media screen and (min-width: 1060px) {
+  .sign-up-container form {
+    left: 30%;
+    animation: fade-in 1s;
+  }
+  .sign-up-container.closing form {
+    left: -100%;
+  }
+}
+@media screen and (max-width: 1060px) {
+  .sign-up-container form {
+    left: 50%;
+    animation: fade-in-small 1s;
+  }
+  .sign-up-container.closing form {
+    left: -100%;
+  }
+}
+@media screen and (max-width: 640px) {
+  .sign-up-container form {
+    border-radius: 0;
+  }
+  .sign-up-container form > div {
+    flex-direction: column;
+  }
+  .sign-up-container form > div * {
+    width: 100% !important;
+  }
+  .sign-up-container form > div label {
+    margin: 7px;
+  }
+  .sign-up-container form > div label span {
+    top: 0;
+    transform: translate(0, 0) !important;
+    position: relative !important;
+    float: left !important;
+    text-align: left;
+    right: 0 !important;
+  }
+  .sign-up-container form > div label span::after {
+    content: "" !important;
+  }
+}
+@media screen and (max-width: 440px) {
+  .sign-up-container form > div:not(.close) {
+    min-width: 0 !important;
+  }
+  .sign-up-container form > div:not(.close) input {
+    margin: auto;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 30%;
+  }
+}
+@keyframes fade-in-small {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 50%;
+  }
+}
+@keyframes fade-in-background {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: rgba(255, 77, 109, 0.1);
+  }
 }
 
 /*# sourceMappingURL=sign-up.css.map */

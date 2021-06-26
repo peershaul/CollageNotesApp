@@ -5,13 +5,14 @@ class SignUp extends React.Component {
 	constructor(props) {
 		super(props);
 		this.form = React.createRef();
+		this.container = React.createRef();
 	}
 
-	render() {
+	render = () => {
 		return (
-			<div className="sign-up-container">
+			<div className={this.props.awake ? 'sign-up-container' : 'sign-up-container closed'} ref={this.container}>
 				<form ref={this.form} className="sign-up">
-					<div className="close" />
+					<div className="close" onClick={this.closeForm} />
 					<div>
 						<label htmlFor="username">
 							<span>Username</span>
@@ -34,7 +35,19 @@ class SignUp extends React.Component {
 				</form>
 			</div>
 		);
-	}
+	};
+
+	closeForm = () => {
+		const container = this.container.current;
+		if (!container.classList.contains('closed')) {
+			container.classList.add('closing');
+			this.props.unset();
+			setTimeout(() => {
+				container.classList.remove('closing');
+				container.classList.add('closed');
+			}, 1050);
+		}
+	};
 }
 
 export default SignUp;

@@ -6,6 +6,15 @@
     height: 100% 
     width: 100% 
     z-index: 100
+    animation: fade-in-background 1s
+    transition: all 1s
+    &.closed
+        display: none
+    &.closing
+        background-color: transparent
+        form 
+            left: -100%
+    
     .close
         position: absolute
         width: fit-content
@@ -43,12 +52,12 @@
         position: absolute
         transform: translate(-50%, -50%)
         top: 50%
-        left: 30% 
         padding: 10px
         padding-top: 50px
         padding-right: 50px
         border-radius: 25px
         box-shadow: 3px 5px 10px #000a
+        transition: all 1s!important
         color: $color0
         & > div:not(.close) 
             display: flex 
@@ -106,3 +115,61 @@
                 weight: bold
             &:hover, &:focus 
                 background-color: $color7
+    @media screen and (min-width: 1060px)
+        form 
+            left: 30%
+            animation: fade-in 1s
+        &.closing
+            form
+                left: -100%
+                
+    @media screen and (max-width: 1060px)
+        form 
+            left: 50%
+            animation: fade-in-small 1s
+        &.closing
+            form
+                left: -100%
+    
+    @media screen and (max-width: 640px)
+        form
+            border-radius: 0
+            & > div
+                flex-direction: column
+                * 
+                    width: 100%!important
+                label 
+                    margin: 7px
+                    span 
+                        top: 0
+                        transform: translate(0, 0)!important
+                        position: relative!important
+                        float: left!important
+                        text-align: left
+                        right: 0!important
+                        &::after 
+                            content: ''!important
+
+    @media screen and (max-width: 440px)
+        form > div:not(.close) 
+            min-width: 0!important
+            input 
+                margin: auto
+
+@keyframes fade-in
+    from 
+        left: -100% 
+    to 
+        left: 30%
+
+@keyframes fade-in-small
+    0%
+        left: -100%
+    100%
+        left: 50%
+
+@keyframes fade-in-background
+    0%
+        background-color: transparent
+    100%
+        background-color: transparentize($color5, 0.9)

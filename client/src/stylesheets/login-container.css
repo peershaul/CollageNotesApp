@@ -21,6 +21,10 @@ section article {
   left: 50%;
   padding: 20px;
   animation: 0.75s article-fade;
+  filter: blur(0);
+  transition: filter 1s;
+}
+section article.signup {
   filter: blur(8px);
 }
 @media screen and (max-width: 1060px) {
