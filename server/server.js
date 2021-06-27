@@ -1,53 +1,153 @@
-const express = require('express')
-const multer = require('multer')
-const morgan = require('morgan')
-const path = require('path')
-const bodyParser = require('body-parser').urlencoded({ extended: false })
-const cors = require('cors')
-const fs = require('fs')
+const express = require('express');
+const multer = require('multer');
+const morgan = require('morgan');
+const path = require('path');
+const uuid = require('uuid').v4;
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const fs = require('fs');
 
-const app = express()
+const app = express();
 
-const PORT = process.env.PORT || 3500
-const maindir = path.join(__dirname, "..")
-console.log(`main directory is: ${maindir}`)
+const PORT = process.env.PORT || 3500;
+const maindir = path.join(__dirname, '..');
+console.log(`main directory is: ${maindir}`);
 
+// Setting up the storage protocol for this server
 const fileStorageEngine = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const stdpath = path.join(maindir, "public/files")
-        const trgtpath = path.join(stdpath, req.body.location)
+	destination: (req, file, cb) => {
+		const stdpath = path.join(maindir, 'public/files');
+		const trgtpath = path.join(stdpath, req.body.location);
 
-        if (!fs.existsSync(trgtpath)) {
-            const folders = req.body.location.split('/')
-            let curpath = stdpath
-            for (let i = 0; i < folders.length; i++) {
-                const nxtpath = path.join(curpath, folders[i])
-                if (!fs.existsSync(nxtpath)) fs.mkdirSync(nxtpath)
-                curpath = nxtpath
-            }
-        }
+		if (!fs.existsSync(trgtpath)) {
+			const folders = req.body.location.split('/');
+			let curpath = stdpath;
+			for (let i = 0; i < folders.length; i++) {
+				const nxtpath = path.join(curpath, folders[i]);
+				if (!fs.existsSync(nxtpath)) fs.mkdirSync(nxtpath);
+				curpath = nxtpath;
+			}
+		}
 
-        cb(null, trgtpath)
-    },
+		cb(null, trgtpath);
+	},
 
-    filename: (req, file, cb) => {
-        cb(null, file.originalname)
-    }
-})
+	filename: (req, file, cb) => {
+		cb(null, file.originalname);
+	}
+});
 
-const upload = multer({ storage: fileStorageEngine })
-app.use(morgan('dev'))
-app.use(bodyParser)
-app.use(cors())
+// using and activating some useful apps
+const upload = multer({ storage: fileStorageEngine }); // upload is the variable that interfaces multer for the ftp server
+const urlParser = bodyParser.urlencoded({ extended: true }); // This used for the url encoded bodies of some http requests
+const jsonParser = bodyParser.json(); // This used for the json encoded bodies of some other http requests
+app.use(morgan('dev')); // This is a logger for the develpment phase
+app.use(cors()); // cors is always useful:)
 
-app.post('/single', upload.single('example-file'), (req, res) => {
-    res.json({
-        message: 'success',
-        file: req.file,
-        body: req.body
-    })
-})
+/** The user class, here for interfacing the multiple users around here easily */
+class User {
+	constructor(username, id) {
+		(this.username = username), (this.id = id);
+		if (!fs.existsSync(path.join(maindir, `public/files/${id}`)))
+			fs.mkdirSync(path.join(maindir, `public/files/${id}`));
+	}
+}
 
+let users = [];
+function initialize_users() {
+	const f = JSON.parse(fs.readFileSync('JSON/user.json'))['users'];
+	for (let i = 0; i < f.length; i++) users.push(new User(f[i]['username'], f[i]['id']));
+}
 
+// Authenticate users
+function internal_login(username, password) {
+	const users = JSON.parse(fs.readFileSync('JSON/user.json'))['users'];
+	for (let i = 0; i < users.length; i++)
+		if (users[i]['username'] == username) {
+			if (users[i]['password'] == password) return users[i]['id'];
+			else return null;
+		}
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}.....`))
+	return null;
+}
+
+function internal_signup(username, password) {
+	let f = JSON.parse(fs.readFileSync('JSON/user.json'));
+	for (let i = 0; i < f.users.length; i++) if (f.users[i].username == username) return [ null, 'exists' ];
+
+	const id = uuid();
+	f.users.push({ username, password, id });
+	fs.writeFileSync('JSON/user.json', JSON.stringify(f));
+
+	users.push(new User(username, id));
+
+	return [ id, null ];
+}
+
+function delete_user(id) {
+	let f = JSON.parse(fs.readFileSync('JSON/user.json'));
+	let found = false;
+	console.log(`given id: ${id}`);
+	for (let i = 0; i < f.users.length; i++) {
+		console.log(`current file id: ${f.users[i].id}`);
+		if (f.users[i].id === id) {
+			found = true;
+			f.users.splice(i, i + 1);
+			break;
+		}
+	}
+
+	if (!found) return 'not-found-file';
+
+	found = false;
+
+	for (let i = 0; i < users.length; i++)
+		if (users[i].id == id) {
+			found = true;
+			users.splice(i, i + 1);
+			break;
+		}
+
+	if (!found) return 'not-found-array';
+
+	fs.writeFileSync('JSON/user.json', JSON.stringify(f));
+	fs.rmdirSync(path.join(maindir, `public/files/${id}`), {
+		recursive: true
+	});
+	return 'no-error';
+}
+
+initialize_users();
+
+app.post('/login', jsonParser, (req, res) => {
+	const id = internal_login(req.body.username, req.body.password);
+	res.json({
+		id: id,
+		username: username,
+		password: password,
+		error: id == null
+	});
+});
+
+app.post('/signup', jsonParser, (req, res) => {
+	const message = internal_signup(req.body.username, req.body.password);
+	res.json({
+		message: message[1],
+		username: username,
+		password: password,
+		id: message[0],
+		error: message[0] == null
+	});
+});
+
+app.delete('/user/:id', (req, res) => {
+	const response = delete_user(req.params.id);
+	const error = response != 'no-error';
+	res.json({
+		deleted_id: error ? null : req.params.id,
+		message: response,
+		error: error
+	});
+});
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}.....`));

@@ -22,8 +22,6 @@ class Login extends React.Component {
 			</form>
 		);
 	}
-
-	hello = () => alert('hello!');
 }
 
 export default Login;
