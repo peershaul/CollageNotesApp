@@ -41,7 +41,42 @@ section article.signup {
     animation-name: article-fade-mobile;
   }
 }
+section .prompt {
+  background-color: #ff4d6d;
+  color: #222222;
+  position: fixed;
+  transform: translate(-50%, 0);
+  left: 50%;
+  bottom: 100px;
+  padding: 10px 15px;
+  border-radius: 7px;
+  display: none;
+  animation: prompt 5s;
+}
+@media screen and (max-width: 600px) {
+  section .prompt {
+    width: 80%;
+  }
+}
 
+@keyframes prompt {
+  0% {
+    bottom: -100px;
+    opacity: 0;
+  }
+  25% {
+    bottom: 100px;
+    opacity: 1;
+  }
+  75% {
+    bottom: 100px;
+    opacity: 1;
+  }
+  100% {
+    bottom: -100px;
+    opacity: 0;
+  }
+}
 @keyframes article-fade {
   0% {
     top: 100%;

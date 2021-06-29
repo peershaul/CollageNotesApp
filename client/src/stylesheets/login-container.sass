@@ -39,6 +39,36 @@ section
             animation-name: article-fade-mobile
 
 
+    .prompt
+        background-color: $color5
+        color: $color0
+        position: fixed
+        transform: translate(-50%, 0)
+        left: 50% 
+        bottom: 100px
+        padding: 10px 15px
+        border-radius: 7px
+        display: none
+        @media screen and (max-width: 600px)
+            width: 80%
+        animation: prompt 5s
+
+@keyframes prompt
+    0%
+        bottom: -100px
+        opacity: 0
+    25% 
+        bottom: 100px
+        opacity: 1  
+    75%
+        bottom: 100px
+        opacity: 1
+    100%
+        bottom: -100px 
+        opacity: 0
+        
+        
+
 @keyframes article-fade
     0%
         top: 100%

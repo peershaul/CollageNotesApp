@@ -62,13 +62,16 @@ function initialize_users() {
 // Authenticate users
 function internal_login(username, password) {
 	const users = JSON.parse(fs.readFileSync('JSON/user.json'))['users'];
-	for (let i = 0; i < users.length; i++)
+	console.log(`${username} attempt's login`);
+	for (let i = 0; i < users.length; i++) {
+		console.log(`check if ${username} is ${users[i]['username']}`);
 		if (users[i]['username'] == username) {
-			if (users[i]['password'] == password) return users[i]['id'];
-			else return null;
+			if (users[i]['password'] === password) return [ users[i]['id'], null ];
+			else return [ null, 'invalid-password' ];
 		}
+	}
 
-	return null;
+	return [ null, 'not-found' ];
 }
 
 function internal_signup(username, password) {
@@ -120,12 +123,16 @@ function delete_user(id) {
 initialize_users();
 
 app.post('/login', jsonParser, (req, res) => {
-	const id = internal_login(req.body.username, req.body.password);
+	const [ id, error ] = internal_login(req.body.username, req.body.password);
+
+	console.log(req.body);
+
 	res.json({
 		id: id,
-		username: username,
-		password: password,
-		error: id == null
+		username: req.body.username,
+		password: req.body.password,
+		error: id == null,
+		message: error
 	});
 });
 
@@ -133,8 +140,8 @@ app.post('/signup', jsonParser, (req, res) => {
 	const message = internal_signup(req.body.username, req.body.password);
 	res.json({
 		message: message[1],
-		username: username,
-		password: password,
+		username: req.body.username,
+		password: req.body.password,
 		id: message[0],
 		error: message[0] == null
 	});

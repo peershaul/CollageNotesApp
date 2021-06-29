@@ -7,12 +7,12 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			page: 0,
-			curr_props: {}
+			url: 'http://192.168.1.13:3500'
 		};
 	}
 
 	render() {
-		const pages = [ <MainLogin props={this.state.curr_props} /> ];
+		const pages = [ <MainLogin deliverId={this.deliverId} url={this.state.url} />, <div /> ];
 
 		return pages[this.state.page];
 	}
@@ -23,6 +23,11 @@ class App extends React.Component {
 			curr_props: scr_props
 		});
 	}
+
+	deliverId = (userData) => {
+		console.log(`${userData[1]}, id delivered`);
+		this.setState({ page: 1 });
+	};
 }
 
 export default App;

@@ -13,23 +13,37 @@ class MainLogin extends React.Component {
 
 		this.signup = React.createRef();
 		this.article = React.createRef();
+		this.prompt = React.createRef();
 	}
 
 	render() {
 		return (
 			<section>
 				<article ref={this.article}>
-					<Login trigger={this.login} />
+					<Login
+						trigger={this.login}
+						deliverId={this.props.deliverId}
+						url={this.props.url}
+						prompt={this.prompt}
+					/>
 					<a href="#" onClick={() => this.setSignUp(true)}>
 						Create a new account
 					</a>
 				</article>
-				<SignUp awake={this.state.signup} unset={this.unsetSignUp} ref={this.signup} />
+				<SignUp
+					awake={this.state.signup}
+					unset={this.unsetSignUp}
+					ref={this.signup}
+					deliverId={this.props.deliverId}
+					url={this.props.url}
+					prompt={this.prompt}
+				/>
+				<div className="prompt" ref={this.prompt}>
+					<span>You typed an incorrect password</span>
+				</div>
 			</section>
 		);
 	}
-
-	login(username, password) {}
 
 	setSignUp = () => {
 		this.signup.current.container.current.classList.remove('closed');
