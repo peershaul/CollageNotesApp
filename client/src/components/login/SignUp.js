@@ -114,10 +114,10 @@ class SignUp extends React.Component {
 					if (data['message'] == 'exists') this.use_prompt('This username already exists');
 					else this.use_prompt('ERROR');
 					return;
+				} else {
+					const userData = [ data['id'], data['username'] ];
+					this.props.deliverId(userData);
 				}
-
-				const userData = [ data['id'], data['username'] ];
-				this.props.deliverId(userData);
 			});
 	};
 
