@@ -1,0 +1,45 @@
+#file-browser {
+  height: calc(100% - 49px);
+  text-align: left;
+  padding: 30px 20px;
+}
+#file-browser > div {
+  display: inline-block;
+  padding: 10px 15px;
+  margin: 10px;
+  border-radius: 10px;
+  background-color: #590d22;
+  padding-left: 30px;
+  position: relative;
+  cursor: pointer;
+}
+#file-browser > div.file::before {
+  content: "F";
+}
+#file-browser > div.directory {
+  background-color: #d42b58;
+  color: #fff0f3;
+}
+#file-browser > div.directory::before {
+  content: "D";
+  color: #590d22;
+}
+#file-browser > div::before {
+  color: #ff4d6d;
+  margin-right: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 17px;
+  position: absolute;
+  transform: translate(0, -50%);
+  top: 50%;
+  left: 12px;
+}
+#file-browser > div:hover.file {
+  background-color: #800f2f;
+}
+#file-browser > div:hover.directory {
+  background-color: #ff758f;
+}
+
+/*# sourceMappingURL=FileBrowser.css.map */

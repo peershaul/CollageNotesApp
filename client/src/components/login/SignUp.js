@@ -115,6 +115,7 @@ class SignUp extends React.Component {
 					else this.use_prompt('ERROR');
 					return;
 				} else {
+					console.log(data);
 					const userData = [ data['id'], data['username'] ];
 					this.props.deliverId(userData);
 				}

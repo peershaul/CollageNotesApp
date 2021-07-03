@@ -1,0 +1,40 @@
+@import './scheme'
+
+#file-browser
+    height: calc(100% - 49px)
+    text-align: left
+    padding: 30px 20px
+    & > div
+        display: inline-block
+        padding: 10px 15px
+        margin: 10px
+        border-radius: 10px
+        background-color: $color1
+        padding-left: 30px
+        position: relative
+        cursor: pointer
+        &.file
+            &::before
+                content: 'F'
+        &.directory
+            background-color: mix($color6, $color4, 20%)
+            color: $color8
+            &::before 
+                content: 'D'
+                color: $color1
+        &::before
+            color: $color5
+            margin-right: 10px
+            font-family: Arial, Helvetica, sans-serif
+            font-weight: bold
+            font-size: 17px
+            position: absolute
+            transform: translate(0, -50%)
+            top: 50%
+            left: 12px
+
+        &:hover 
+            &.file 
+                background-color: $color2
+            &.directory 
+                background-color: $color6

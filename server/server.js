@@ -87,6 +87,16 @@ function internal_signup(username, password) {
 	return [ id, null ];
 }
 
+function userid_exist(id) {
+	console.log(`check id: ${id}`);
+	for (let i = 0; i < users.length; i++) {
+		console.log(`checking if ${users[i].id}`);
+		if (users[i].id == id) return true;
+	}
+
+	return false;
+}
+
 function delete_user(id) {
 	let f = JSON.parse(fs.readFileSync('JSON/user.json'));
 	let found = false;
@@ -118,6 +128,24 @@ function delete_user(id) {
 		recursive: true
 	});
 	return 'no-error';
+}
+
+function look_at_dir(filepath) {
+	let files = [];
+
+	if (!fs.existsSync(filepath)) return false;
+
+	const raw_files = fs.readdirSync(filepath);
+
+	for (let i = 0; i < raw_files.length; i++) {
+		const stat = fs.statSync(path.join(filepath, raw_files[i]));
+		files.push({
+			name: raw_files[i],
+			is_dir: stat.isDirectory()
+		});
+	}
+
+	return files;
 }
 
 initialize_users();
@@ -154,6 +182,36 @@ app.delete('/user/:id', (req, res) => {
 		deleted_id: error ? null : req.params.id,
 		message: response,
 		error: error
+	});
+});
+
+app.post('/look_dir', jsonParser, (req, res) => {
+	console.log(req.body);
+	if (!userid_exist(req.body.userid))
+		return res.json({
+			error: true,
+			filepath: req.body.filepath,
+			files: null,
+			message: 'user doesnt exist'
+		});
+
+	if (req.body.filepath == undefined)
+		return res.json({ error: true, filepath: null, files: null, message: 'filepath doesnt specified' });
+
+	const files = look_at_dir(path.join(maindir, 'public/files', req.body.userid, req.body.filepath));
+	if (typeof files == 'boolean' && !files)
+		return res.json({
+			error: true,
+			filepath: req.body.filepath,
+			files: null,
+			message: 'path not found'
+		});
+
+	return res.json({
+		error: false,
+		filepath: req.body.filepath,
+		files: files,
+		message: null
 	});
 });
 

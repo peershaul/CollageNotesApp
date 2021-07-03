@@ -1,0 +1,35 @@
+@import './scheme'
+
+#user-bar
+    background-color: grey 
+    display: flex
+    & > div
+        &.greeter 
+            background-color: $color2
+            padding: 10px 15px
+            width: 30%
+            position: relative
+            span
+                position: absolute
+                transform: translate(-50%, -50%)
+                top: 50%
+                left: 50%
+        &.location
+            padding: 10px 25px
+            text-align: left
+            background-color: $color4
+            width: 70%
+            & > div
+                display: inline-block
+                cursor: pointer
+                background-color: $color3
+                margin: 2px
+                padding: 2px 5px
+                &:hover 
+                    background-color: mix($color3, $color4, 50%)
+                .root::after 
+                    content: '/'
+            slash 
+                &::after 
+                    content: '/'
+                    margin: 3px

@@ -1,0 +1,41 @@
+#user-bar {
+  background-color: grey;
+  display: flex;
+}
+#user-bar > div.greeter {
+  background-color: #800f2f;
+  padding: 10px 15px;
+  width: 30%;
+  position: relative;
+}
+#user-bar > div.greeter span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+#user-bar > div.location {
+  padding: 10px 25px;
+  text-align: left;
+  background-color: #c9184a;
+  width: 70%;
+}
+#user-bar > div.location > div {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #a4133c;
+  margin: 2px;
+  padding: 2px 5px;
+}
+#user-bar > div.location > div:hover {
+  background-color: #b71643;
+}
+#user-bar > div.location > div .root::after {
+  content: "/";
+}
+#user-bar > div.location slash::after {
+  content: "/";
+  margin: 3px;
+}
+
+/*# sourceMappingURL=UserBar.css.map */
