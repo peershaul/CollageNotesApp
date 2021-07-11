@@ -2,7 +2,6 @@ import './stylesheets/App.css';
 import React from 'react';
 import MainLogin from './components/MainLogin';
 import FileSystem from './components/FileSystem/FileSystem';
-
 class App extends React.Component {
 	constructor(props) {
 		super(props);

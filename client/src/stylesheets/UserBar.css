@@ -18,7 +18,7 @@
   padding: 10px 25px;
   text-align: left;
   background-color: #c9184a;
-  width: 70%;
+  width: 60%;
 }
 #user-bar > div.location > div {
   display: inline-block;
@@ -36,6 +36,93 @@
 #user-bar > div.location slash::after {
   content: "/";
   margin: 3px;
+}
+#user-bar > div.buttons {
+  background-color: #800f2f;
+  width: 10%;
+  position: relative;
+  text-align: left;
+  padding: 5px 10px;
+}
+#user-bar > div.buttons > div {
+  background-color: #590d22;
+  height: 39px;
+  width: 39px;
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  margin: 0 10px;
+  border-radius: 100%;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+#user-bar > div.buttons > div.back > div {
+  box-sizing: border-box;
+  position: absolute;
+  display: block;
+  transform: scale(1.25) translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  top: calc(50% + 2px);
+  left: calc(50% + 3.5px);
+}
+#user-bar > div.buttons > div.back > div::before, #user-bar > div.buttons > div.back > div::after {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  top: 7px;
+  transition: all 0.25s;
+}
+#user-bar > div.buttons > div.back > div::after {
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #ff4d6d;
+  border-left: 2px solid #ff4d6d;
+  transform: rotate(45deg);
+  left: 7px;
+}
+#user-bar > div.buttons > div.back > div::before {
+  width: 2px;
+  height: 10px;
+  left: 10px;
+  background: #ff4d6d;
+}
+#user-bar > div.buttons > div.create > div {
+  margin-top: -2px;
+  position: absolute;
+  transform: scale(1.25) translate(-50%, -50%);
+  width: 16px;
+  height: 2px;
+  top: calc(50% + 2px);
+  left: calc(50% + 3.5px);
+}
+#user-bar > div.buttons > div.create > div, #user-bar > div.buttons > div.create > div::after {
+  display: block;
+  background: #ff4d6d;
+  border-radius: 10px;
+  transition: all 0.25s;
+}
+#user-bar > div.buttons > div.create > div::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 16px;
+  top: -7px;
+  left: 7px;
+}
+#user-bar > div.buttons > div:hover {
+  background-color: #a4133c;
+}
+#user-bar > div.buttons > div:hover.back > div::after {
+  border-top-color: #ffb3c1;
+  border-left-color: #ffb3c1;
+}
+#user-bar > div.buttons > div:hover.back > div::before {
+  background-color: #ffb3c1;
+}
+#user-bar > div.buttons > div:hover.create > div::after, #user-bar > div.buttons > div:hover.create > div {
+  background-color: #ffb3c1;
 }
 
 /*# sourceMappingURL=UserBar.css.map */

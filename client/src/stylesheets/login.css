@@ -36,7 +36,7 @@ form:not(.sign-up) > div input {
   border: 4.5px solid #222222;
   outline: none;
   padding: 7px 15px;
-  font-family: "JetBrains Mono", Arial, Helvetica, sans-seri;
+  font-family: "JetBrains Mono", Arial, Helvetica, sans-serif;
   border-radius: 10px;
   transition: all 0.25s;
 }

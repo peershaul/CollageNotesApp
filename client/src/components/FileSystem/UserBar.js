@@ -38,9 +38,18 @@ class UserBar extends React.Component {
 				<div className="location">
 					<span>Your current location: </span>
 					{links}
-					{/*<div className="item">items</div>
-					<slash />
-		<div className="item">hello</div>*/}
+				</div>
+				<div className="buttons">
+					<div className="create" onClick={this.props.open_add_panel}>
+						<div />
+					</div>
+					<div
+						className="back"
+						onClick={this.back_folder}
+						style={{ display: this.props.current_location == '/' ? 'none' : 'inline-block' }}
+					>
+						<div />
+					</div>
 				</div>
 			</div>
 		);
@@ -67,6 +76,16 @@ class UserBar extends React.Component {
 			filepath = cunstructed_path.join('/');
 		} else filepath = '/';
 
+		this.props.main_change_directory(filepath);
+	};
+
+	back_folder = () => {
+		const splitted = this.props.current_location.split('/');
+		if (splitted[1] == '') return;
+		let new_arr = [];
+		for (let i = 0; i < splitted.length - 1; i++) new_arr.push(splitted[i]);
+		let filepath = new_arr.join('/');
+		if (filepath.charAt(0) != '/') filepath = '/' + filepath;
 		this.props.main_change_directory(filepath);
 	};
 }

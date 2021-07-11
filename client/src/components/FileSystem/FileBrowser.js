@@ -27,6 +27,8 @@ class FileBrowser extends React.Component {
 			);
 		}
 
+		if (fileboxes.length == 0 && files != null) fileboxes.push(<p key="1">This directory is empty</p>);
+
 		return <div id="file-browser">{fileboxes}</div>;
 	}
 

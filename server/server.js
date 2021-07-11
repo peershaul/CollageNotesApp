@@ -215,4 +215,116 @@ app.post('/look_dir', jsonParser, (req, res) => {
 	});
 });
 
+app.post('/create_dir', jsonParser, (req, res) => {
+	console.log(req.body);
+
+	if(req.body.userid == "" || req.body.userid == null || req.body.userid == undefined)
+		return res.json({
+			error : true,
+			created_path: null,
+			message: 'user-not-defined'
+		})
+
+	if (!userid_exist(req.body.userid))
+		return res.json({
+			error: true,
+			created_path: null,
+			message: 'user-not-exist'
+		});
+
+	const files = look_at_dir(path.join(maindir, 'public/files', req.body.userid, req.body.location))
+	if(typeof files == 'boolean' && !files)
+		return res.json({
+			error: true,
+			created_path: null, 
+			message: 'path-not-found'
+		})
+	
+	for(let i = 0; i < files.length; i++)
+		if(files[i].name == req.body.name)
+			return res.json({
+				error: true, 
+				created_path: null,
+				message: 'path-already-exist'
+			})
+	fs.mkdir(path.join(maindir, 'public/files', req.body.userid, req.body.location, req.body.name), 
+		(err) =>{
+			if(err) {
+				return res.json({
+					error: true,
+					created_path: null,
+					message: 'internal-error'
+				})
+			}
+
+			return res.json({
+				error: false,
+				created_path: path.join(req.body.location, req.body.name),
+				message: 'path-created'
+			})
+
+		})
+	
+});
+
+
+app.post('/create_file', jsonParser, (req, res) => {
+	console.log(req.body)
+
+	const body = req.body 
+
+	if(body.userid == "" || body.userid == null || body.userid == undefined) 
+		return res.json({
+			error: true,
+			created_file: null,
+			message: 'user id not specified'
+		})
+
+	if(!userid_exist(body.userid))
+		return res.json({
+			error: true,
+			created_file: null,
+			message: 'user not found'
+		})
+
+	const local_location = path.join(maindir, 'public/files', body.userid, body.location)		
+	const files = look_at_dir(local_location)
+	if(typeof files == 'boolean' && !files)
+		return res.json({
+			error: true,
+			created_file: null, 
+			message: 'location doesnt exist'
+		})
+
+	for(let i = 0; i < files.length; i++)
+		if(files[i].name == body.name)
+			return res.json({
+				error: true, 
+				created_file: null, 
+				message: 'path already exist'
+			})
+
+
+	fs.appendFile(path.join(local_location, body.name), '',
+		err => {
+			if(err) {
+				res.json({
+					error: true, 
+					created_file: null,
+					message: 'internal error'
+				})
+				throw err
+			}
+
+			return res.json({
+				error: false,
+				created_file: path.join(body.location, body.name),
+				message: 'file created successfully'
+			})
+		})
+
+	
+
+})
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.....`));

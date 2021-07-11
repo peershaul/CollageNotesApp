@@ -18,7 +18,7 @@
             padding: 10px 25px
             text-align: left
             background-color: $color4
-            width: 70%
+            width: 60%
             & > div
                 display: inline-block
                 cursor: pointer
@@ -33,3 +33,81 @@
                 &::after 
                     content: '/'
                     margin: 3px
+
+        &.buttons 
+            background-color: $color2
+            width: 10%
+            position: relative
+            text-align: left
+            padding: 5px 10px
+            & > div 
+                background-color: $color1
+                height: 39px 
+                width: 39px 
+                position: relative
+                top: 2px
+                display: inline-block
+                margin: 0 10px
+                border-radius: 100%
+                transition: all 0.25s
+                cursor: pointer
+                &.back > div
+                    box-sizing: border-box
+                    position: absolute
+                    display: block
+                    transform: scale(1.25) translate(-50%, -50%)
+                    width: 22px
+                    height: 22px
+                    top: calc(50% + 2px) 
+                    left: calc(50% + 3.5px)
+                    &::before, &::after
+                        content: ''
+                        display: block 
+                        box-sizing: border-box
+                        position: absolute
+                        top: 7px
+                        transition: all 0.25s
+                    &::after 
+                        width: 8px
+                        height: 8px
+                        border-top: 2px solid $color5
+                        border-left: 2px solid $color5
+                        transform: rotate(45deg)
+                        left: 7px 
+                    &::before
+                        width: 2px 
+                        height: 10px 
+                        left: 10px 
+                        background: $color5
+                
+                &.create > div  
+                    margin-top: -2px
+                    position: absolute 
+                    transform: scale(1.25) translate(-50%, -50%)
+                    width: 16px
+                    height: 2px
+                    top: calc(50% + 2px) 
+                    left: calc(50% + 3.5px)
+                    &, &::after 
+                        display: block 
+                        background: $color5
+                        border-radius: 10px 
+                        transition: all 0.25s
+                    &::after
+                        content: ''
+                        position: absolute
+                        width: 2px
+                        height: 16px
+                        top: -7px
+                        left: 7px 
+                &:hover 
+                    background-color: $color3
+                    &.back > div
+                        &::after 
+                            border-top-color: $color7
+                            border-left-color: $color7
+                        &::before 
+                            background-color: $color7
+                    &.create > div 
+                        &::after, & 
+                            background-color: $color7

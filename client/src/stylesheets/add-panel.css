@@ -1,0 +1,50 @@
+#add-panel {
+  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-height: 400px;
+}
+#add-panel .selector.button-selector button {
+  margin: 40px;
+  padding: 15px 25px;
+  font-size: 25px;
+  font-family: "JetBrains Mono";
+  font-weight: bold;
+  border: 5px solid #921136;
+  background-color: #921136;
+  color: #ffb3c1;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+#add-panel .selector.button-selector button:hover {
+  background-color: #c9184a;
+}
+#add-panel .selector.file-drop-selector form input[type=file] {
+  margin: 20px;
+}
+#add-panel .selector.file-drop-selector form .file-drop-area {
+  border: 2px dashed #ffb3c1;
+  background-color: rgba(34, 34, 34, 0.35);
+  height: 300px;
+  width: 80%;
+  margin: auto;
+  position: relative;
+}
+#add-panel .selector.file-drop-selector form .file-drop-area span {
+  color: #ffb3c1;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+#add-panel .selector.file-drop-selector form .file-drop-area.drag {
+  background-color: rgba(34, 34, 34, 0.7);
+}
+#add-panel .selector.file-drop-selector form .file-drop-area.drag span {
+  color: #fff0f3;
+}
+
+/*# sourceMappingURL=add-panel.css.map */

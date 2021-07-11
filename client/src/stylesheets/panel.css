@@ -1,0 +1,67 @@
+.panel {
+  background-color: #a4133c;
+  background-image: linear-gradient(-50deg, #a4133c 0%, #c9184a 45%, #ff4d6d 100%);
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 500px;
+  width: 800px;
+  border-radius: 30px;
+  padding: 20px 25px;
+  animation: panel-fade 1s;
+  transition: all 1s;
+  opacity: 1;
+}
+.panel.closing {
+  top: 150%;
+  opacity: 0;
+}
+.panel .close {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+  transition: all 0.25s;
+  border-radius: 10px;
+}
+.panel .close::after, .panel .close::before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 40px;
+  background-color: #ff758f;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  transition: all 0.25s;
+}
+.panel .close::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.panel .close::before {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.panel .close:hover {
+  background-color: #d92855;
+}
+.panel .close:hover::before, .panel .close:hover::after {
+  background-color: #ffb3c1;
+}
+
+@keyframes panel-fade {
+  0% {
+    top: 150%;
+    opacity: 0;
+  }
+  100% {
+    top: 50%;
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=panel.css.map */
