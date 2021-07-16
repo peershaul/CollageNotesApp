@@ -6,6 +6,7 @@ const uuid = require('uuid').v4;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
+const formidable = require('formidable');
 
 const app = express();
 
@@ -13,36 +14,30 @@ const PORT = process.env.PORT || 3500;
 const maindir = path.join(__dirname, '..');
 console.log(`main directory is: ${maindir}`);
 
-// Setting up the storage protocol for this server
-const fileStorageEngine = multer.diskStorage({
-	destination: (req, file, cb) => {
-		const stdpath = path.join(maindir, 'public/files');
-		const trgtpath = path.join(stdpath, req.body.location);
-
-		if (!fs.existsSync(trgtpath)) {
-			const folders = req.body.location.split('/');
-			let curpath = stdpath;
-			for (let i = 0; i < folders.length; i++) {
-				const nxtpath = path.join(curpath, folders[i]);
-				if (!fs.existsSync(nxtpath)) fs.mkdirSync(nxtpath);
-				curpath = nxtpath;
-			}
-		}
-
-		cb(null, trgtpath);
-	},
-
-	filename: (req, file, cb) => {
-		cb(null, file.originalname);
-	}
-});
-
-// using and activating some useful apps
-const upload = multer({ storage: fileStorageEngine }); // upload is the variable that interfaces multer for the ftp server
 const urlParser = bodyParser.urlencoded({ extended: true }); // This used for the url encoded bodies of some http requests
 const jsonParser = bodyParser.json(); // This used for the json encoded bodies of some other http requests
+
+
+// Setting up the storage protocol for this server
+const file_upload_storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		const form = formidable.IncomingForm()
+
+		form.parse(req, (err, fields, files) => {
+			console.log(err)
+			cb('look')
+		})
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.originalname)
+	}	
+})
+// using and activating some useful apps
+const upload = multer({ storage: file_upload_storage }); // upload is the variable that interfaces multer for the ftp server
+
 app.use(morgan('dev')); // This is a logger for the develpment phase
 app.use(cors()); // cors is always useful:)
+app.use(urlParser)
 
 /** The user class, here for interfacing the multiple users around here easily */
 class User {
@@ -149,6 +144,11 @@ function look_at_dir(filepath) {
 }
 
 initialize_users();
+
+
+app.get('/', (req, res) => {
+	res.send("Hello from the ftp server")
+})
 
 app.post('/login', jsonParser, (req, res) => {
 	const [ id, error ] = internal_login(req.body.username, req.body.password);
@@ -322,9 +322,20 @@ app.post('/create_file', jsonParser, (req, res) => {
 				message: 'file created successfully'
 			})
 		})
+})
 
-	
 
+app.post('/upload_file', (req, res) => {
+	const form = new formidable.IncomingForm()
+
+	form.parse(req => (err, fields, files) => {
+		if(err){
+			console.log(err.message)
+			return 
+		}
+
+		console.log(fields)
+	})
 })
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.....`));

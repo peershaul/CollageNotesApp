@@ -8,11 +8,12 @@ class AddPanel extends Panel {
 		super(props);
 
 		this.id = 'add-panel';
+		this.file_selector = React.createRef()
 		this.screens = [
 			<FileDirSelector set_is_dir={this.set_is_dir} />,
 			<FileUploadOrCreate set_is_uploaded={this.set_is_uploaded} />,
 			<NameSelector set_name={this.set_name} />,
-			<FileDropSelector set_file={this.set_file} />
+			<FileDropSelector set_upload_data = {this.set_upload_data} />	
 		];
 
 		this.defaultState = {};
@@ -21,7 +22,7 @@ class AddPanel extends Panel {
 			screen: 0,
 			is_dir: false,
 			name: '',
-			file: null,
+			upload_data: undefined,
 			is_uploaded: false
 		};
 
@@ -30,7 +31,7 @@ class AddPanel extends Panel {
 				screen: 0,
 				is_dir: false,
 				name: '',
-				file: null,
+				upload_data: undefined,
 				is_uploaded: false
 			});
 		};
@@ -62,15 +63,6 @@ class AddPanel extends Panel {
 		});
 	};
 
-	set_file = (file) => {
-		this.setState(
-			{
-				file: file
-			},
-			this.send_to_server
-		);
-	};
-
 	open_panel = () => {
 		const panel = document.getElementById(this.id);
 		if (panel.style.display == 'flex') return;
@@ -78,6 +70,12 @@ class AddPanel extends Panel {
 
 		this.resetState();
 	};
+
+	set_upload_data = data => {
+		data.append('filepath', this.props.get_current_directory())
+		data.append('userid', this.props.userid)
+		this.setState({upload_data: data}, this.send_to_server)
+	}
 
 	send_to_server = () => {
 		if (this.state.is_dir) {
@@ -98,7 +96,39 @@ class AddPanel extends Panel {
 				}
 				else console.log(`ERROR: ${data.message}`)
 			});
+		}
 
+
+		else {
+			if(!this.state.is_uploaded){
+				fetch(`${this.props.url}/create_file`, {
+					method: 'POST',
+					headers: {
+						'Content-Type' : 'application/json'
+					},
+					body: JSON.stringify({
+						name: this.state.name,
+						location: this.props.get_current_directory(),
+						userid: this.props.userid
+					})
+				}).then(response => response.json()).then(data => {
+					if(!data.error){
+						this.props.main_change_directory(this.props.get_current_directory())
+						this.close_panel()
+					}
+					else console.log(`ERROR: ${data.message}`)
+				})
+			}
+			else {
+				for(let [name, value] of this.state.upload_data){
+					console.log(name)
+					console.log(value)
+				}
+				fetch(`${this.props.url}/upload_file`, {
+					method: 'POST',
+					body: this.state.upload_data
+				})	
+			}
 		}
 	};
 }
@@ -184,13 +214,14 @@ class FileDropSelector extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = { files: null };
+		this.state = {form_data: null}		
+		console.log(this.props.parent)
 	}
 
 	render() {
 		return (
 			<div className="selector file-drop-selector">
-				<form onSubmit={this.submit}>
+				<form ref = {this.form} onSubmit = {this.submit}>
 					<div
 						className="file-drop-area"
 						onDragOver={this.drag_enter}
@@ -199,7 +230,18 @@ class FileDropSelector extends React.Component {
 					>
 						<span>Drop files here</span>
 					</div>
-					<input type="file" name="files" />
+					<input type="file" name="file" />
+					{/*<input 
+						type='text' 
+						name='filepath' 
+						style ={{display: 'none'}} 
+						value = {this.props.get_current_directory()} />
+					<input 
+						type = 'text'
+						name = 'userid'
+						value = {this.props.userid}
+						style = {{display: 'none'}}
+					/>*/}
 					<input type="submit" value="Upload" />
 				</form>
 			</div>
@@ -217,8 +259,6 @@ class FileDropSelector extends React.Component {
 		const fileInput = dropDiv.parentNode.querySelector('input[type="file"]');
 
 		fileInput.files = e.dataTransfer.files;
-
-		this.setState({ files: fileInput.files });
 	};
 
 	drag_enter = (e) => {
@@ -236,10 +276,10 @@ class FileDropSelector extends React.Component {
 		if (dropDiv.classList.contains('drag')) dropDiv.classList.remove('drag');
 	};
 
-	submit = (e) => {
-		e.preventDefault();
-		if (this.state.files != null) this.props.set_file(this.state.files);
-	};
+	submit = e => {
+		e.preventDefault()
+		this.props.set_upload_data(new FormData(e.target))
+	}
 }
 
 export default AddPanel;
