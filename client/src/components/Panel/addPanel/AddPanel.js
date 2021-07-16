@@ -72,8 +72,6 @@ class AddPanel extends Panel {
 	};
 
 	set_upload_data = data => {
-		data.append('filepath', this.props.get_current_directory())
-		data.append('userid', this.props.userid)
 		this.setState({upload_data: data}, this.send_to_server)
 	}
 
@@ -120,14 +118,30 @@ class AddPanel extends Panel {
 				})
 			}
 			else {
-				for(let [name, value] of this.state.upload_data){
-					console.log(name)
-					console.log(value)
-				}
-				fetch(`${this.props.url}/upload_file`, {
+				let file_id;
+				fetch(`${this.props.url}/upload_file_s1`, {
 					method: 'POST',
 					body: this.state.upload_data
-				})	
+				})
+				.then(response => response.json())
+				.then(data => {
+					file_id = data.file_id
+					console.log(data)
+					fetch(`${this.props.url}/upload_file_s2`, {
+						method: 'POST',
+						headers: {
+							'Content-Type' : 'application/json'
+						},
+						body: JSON.stringify({
+							file_id: file_id,
+							filepath: this.props.get_current_directory(),
+							userid: this.props.userid,
+							force: false
+						})
+					})
+					.then(response => response.json())
+					.then(data => console.log(data))
+				})
 			}
 		}
 	};

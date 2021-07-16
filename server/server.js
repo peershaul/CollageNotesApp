@@ -6,7 +6,7 @@ const uuid = require('uuid').v4;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
-const formidable = require('formidable');
+const mv = require('mv')
 
 const app = express();
 
@@ -21,16 +21,14 @@ const jsonParser = bodyParser.json(); // This used for the json encoded bodies o
 // Setting up the storage protocol for this server
 const file_upload_storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const form = formidable.IncomingForm()
-
-		form.parse(req, (err, fields, files) => {
-			console.log(err)
-			cb('look')
+		tmp_files.push({
+			name: file.originalname,
+			id: uuid()
 		})
-	},
-	filename: (req, file, cb) => {
-		cb(null, file.originalname)
-	}	
+
+		cb(null, path.join(maindir, 'public/files/tmp'))
+	}, 
+	filename: (req, file, cb) => cb(null, file.originalname)	
 })
 // using and activating some useful apps
 const upload = multer({ storage: file_upload_storage }); // upload is the variable that interfaces multer for the ftp server
@@ -49,6 +47,7 @@ class User {
 }
 
 let users = [];
+let tmp_files = []
 function initialize_users() {
 	const f = JSON.parse(fs.readFileSync('JSON/user.json'))['users'];
 	for (let i = 0; i < f.length; i++) users.push(new User(f[i]['username'], f[i]['id']));
@@ -141,6 +140,15 @@ function look_at_dir(filepath) {
 	}
 
 	return files;
+}
+
+
+function find_tmp_file(id) {
+	for(file of tmp_files)
+		if(file.id == id)
+			return file
+
+	return null
 }
 
 initialize_users();
@@ -322,20 +330,79 @@ app.post('/create_file', jsonParser, (req, res) => {
 				message: 'file created successfully'
 			})
 		})
+
 })
 
 
-app.post('/upload_file', (req, res) => {
-	const form = new formidable.IncomingForm()
-
-	form.parse(req => (err, fields, files) => {
-		if(err){
-			console.log(err.message)
-			return 
-		}
-
-		console.log(fields)
+app.post('/upload_file_s1', upload.single('file'), (req, res) => {
+	const file = tmp_files[tmp_files.length - 1]
+	res.json({
+		error: false,
+		file_id: file.id,
+		file_name: file.name,
 	})
 })
+
+
+app.post('/upload_file_s2', jsonParser, (req, res) => {
+
+	if(!userid_exist(req.body.userid)) return res.json({
+		error: true,
+		filepath: null,
+		message: 'user not found'
+	})
+
+	const file = find_tmp_file(req.body.file_id) 
+	
+	const file_index = tmp_files.indexOf(file)
+	if(file_index == -1) return res.json({
+			error: true,
+			filepath: null,
+			message: 'file not found'
+		})
+
+	const ogpath = path.join(maindir, 'public/files/tmp', file.name)
+	const abs_dest_path = path.join(maindir, 'public/files', req.body.userid, req.body.filepath.substring(1, req.body.filepath.length)) 
+	console.log(`abs path: ${abs_dest_path}`)
+	if(!fs.existsSync(abs_dest_path)){
+		if(req.body.force){
+			const folders = req.body.filepath.split('/')
+			let curpath = path.join(maindir, 'public/files', req.body.userid)
+			for(let i = 0; i < folders.length; i++){
+				const nxtpath = path.join(curpath, folders[i])
+				if(!fs.existsSync(nxtpath)) fs.mkdirSync(nxtpath)
+				curpath = nxtpath
+			}
+		}
+
+		else return res.json({
+			error: true, 
+			filepath: null,
+			message: 'filepath not found'
+		})
+	}
+
+	
+	const dest = path.join(maindir, 'public/files', req.body.userid, req.body.filepath, file.name)
+	mv(ogpath, dest, err => {
+		if(err) {
+			res.json({
+				error: true, 
+				filepath: null,
+				message: 'internal error'
+			})
+			throw err 
+		}
+	})
+
+	tmp_files.splice(file_index, 1)
+
+	res.json({
+		error: false,
+		filepath: dest 
+	})
+	
+})
+
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.....`));
